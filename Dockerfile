@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Installation des dépendances système de base
+# Installation des dépendances système essentielles uniquement
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
@@ -9,23 +9,24 @@ RUN apt-get update && apt-get install -y \
     git \
     && docker-php-ext-install pdo pdo_pgsql zip
 
-# Installation des extensions PHP
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Configuration Apache
+COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
+RUN a2enmod rewrite
 
 # Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Configuration d'Apache
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf
-RUN a2enmod rewrite
 
 # Copie du projet
 WORKDIR /var/www/html
 COPY . .
 
-# Installation des dépendances
+# Droits d'accès pour Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Installation des dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Exposition du port
+EXPOSE 80
+
+CMD ["apache2-foreground"]
