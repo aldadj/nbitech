@@ -23,8 +23,8 @@ COPY . .
 # Droits d'accès pour Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Installation des dépendances PHP
-RUN composer install --no-dev --optimize-autoloader
+# Installation des dépendances PHP avec limitation de mémoire
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 # Exposition du port
 EXPOSE 80
