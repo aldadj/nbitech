@@ -1,14 +1,13 @@
 FROM php:8.2-apache
 
-# Installation des dépendances système
+# Installation des dépendances système de base
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
+    libpq-dev \
+    libzip-dev \
     zip \
     unzip \
     git \
-    curl
+    && docker-php-ext-install pdo pdo_pgsql zip
 
 # Installation des extensions PHP
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
