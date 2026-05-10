@@ -1,32 +1,38 @@
-FROM php:8.2-apache
+FROM php:8.3-apache
 
-# Installation des dépendances système essentielles uniquement
+# 1. Installation des dépendances système
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    git \
-    && docker-php-ext-install pdo pdo_pgsql zip
+    libpq-dev libzip-dev zip unzip git \
+    && docker-php-ext-install pdo pdo_pgsql zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Configuration Apache
-COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
+# 2. Écriture de la config Apache
+RUN echo '<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html/public\n\
+    <Directory /var/www/html/public>\n\
+        Options Indexes FollowSymLinks\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
+    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
 RUN a2enmod rewrite
 
-# Installation de Composer
+# 3. Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copie du projet
 WORKDIR /var/www/html
+
+# 4. Copie du projet
 COPY . .
 
-# Droits d'accès pour Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# 5. Permissions Laravel (On les met AVANT composer pour éviter les soucis de cache)
+RUN chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
 
-# Installation des dépendances PHP avec limitation de mémoire
+# 6. Installation des dépendances PHP (Version 8.3 maintenant !)
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
-# Exposition du port
 EXPOSE 80
-
 CMD ["apache2-foreground"]
