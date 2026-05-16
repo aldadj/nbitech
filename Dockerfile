@@ -35,4 +35,4 @@ RUN chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage b
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 EXPOSE 80
-CMD ["apache2-foreground"]
+CMD php artisan migrate --force && apache2-foreground
