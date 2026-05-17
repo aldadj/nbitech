@@ -62,4 +62,4 @@ RUN composer dump-autoload --optimize --no-dev --no-scripts
 EXPOSE 80
 
 # Préparation de l'environnement et démarrage
-CMD php artisan migrate --force && php artisan tinker --execute="App\Models\User::firstOrCreate(['email' => 'votre@email.com'], ['name' => 'Admin', 'password' => Illuminate\Support\Facades\Hash::make('votre_mot_de_passe')]);" && php artisan storage:link --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
+CMD php artisan migrate --force && php artisan tinker --execute="App\Models\User::firstOrCreate(['email' => 'admin@nbitech.bfa'], ['name' => 'Admin', 'password' => Illuminate\Support\Facades\Hash::make('password123')]);" && php artisan storage:link --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
