@@ -61,5 +61,4 @@ RUN composer dump-autoload --optimize --no-dev --no-scripts
 EXPOSE 80
 
 # Exécution des migrations PostgreSQL + Mise en cache au démarrage
-CMD php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
-
+CMD php artisan migrate --force && apache2-foreground
