@@ -1,38 +1,56 @@
+# --- Étape 1 : Compilation des assets (Vite) ---
+FROM node:20 AS node-builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
 FROM php:8.3-apache
 
 # 1. Installation des dépendances système
 RUN apt-get update && apt-get install -y \
-    libpq-dev libzip-dev zip unzip git \
-    && docker-php-ext-install pdo pdo_pgsql zip \
+    libpq-dev libzip-dev libicu-dev zip unzip git \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install pdo pdo_pgsql zip intl bcmath \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # 2. Écriture de la config Apache
-RUN echo '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html/public\n\
-    <Directory /var/www/html/public>\n\
-        Options Indexes FollowSymLinks\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
-    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
-
 RUN a2enmod rewrite
+
+COPY <<EOF /etc/apache2/sites-available/000-default.conf
+<VirtualHost *:80>
+    DocumentRoot /var/www/html/public
+    <Directory /var/www/html/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+EOF
 
 # 3. Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# 4. Copie du projet
+# 4. Installation des dépendances PHP (Optimisation du cache Docker)
+COPY composer.json composer.lock* ./
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --no-scripts
+
+# 5. Copie du reste du projet
 COPY . .
 
-# 5. Permissions Laravel (On les met AVANT composer pour éviter les soucis de cache)
-RUN chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
+# Copie des assets compilés depuis l'étape Node
+COPY --from=node-builder /app/public/build ./public/build
 
-# 6. Installation des dépendances PHP (Version 8.3 maintenant !)
-RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+# 6. Finalisation de l'autoload et permissions
+RUN composer dump-autoload --optimize --no-dev --no-scripts
+RUN mkdir -p storage bootstrap/cache && chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80
-CMD php artisan migrate --force && apache2-foreground
+
+# On utilise un script ou on s'assure que la DB est prête. 
+CMD php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
