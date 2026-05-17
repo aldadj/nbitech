@@ -48,17 +48,18 @@ COPY --from=node-builder /app/public/build ./public/build
 
 # 6. Création forcée de toute l'arborescence Laravel et permissions
 RUN mkdir -p bootstrap/cache \
+             storage/app/public \
              storage/framework/cache/data \
              storage/framework/sessions \
              storage/framework/views \
              storage/logs \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public
 
 # 7. Finalisation de l'autoload
 RUN composer dump-autoload --optimize --no-dev --no-scripts
 
 EXPOSE 80
 
-# Exécution des migrations PostgreSQL + Mise en cache au démarrage
-CMD php artisan migrate --force && apache2-foreground
+# Préparation de l'environnement et démarrage
+CMD php artisan migrate --force && php artisan tinker --execute="App\Models\User::firstOrCreate(['email' => 'votre@email.com'], ['name' => 'Admin', 'password' => Illuminate\Support\Facades\Hash::make('votre_mot_de_passe')]);" && php artisan storage:link --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
