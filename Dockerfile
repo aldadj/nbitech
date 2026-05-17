@@ -48,11 +48,12 @@ COPY --from=node-builder /app/public/build ./public/build
 
 # 6. Création forcée de toute l'arborescence Laravel et permissions
 RUN mkdir -p bootstrap/cache \
-             storage/app/public \
+             storage/app/public/img \
              storage/framework/cache/data \
              storage/framework/sessions \
              storage/framework/views \
              storage/logs \
+    && if [ -d storage/img ]; then cp -rf storage/img/* storage/app/public/img/; fi \
     && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public
 
@@ -62,4 +63,4 @@ RUN composer dump-autoload --optimize --no-dev --no-scripts
 EXPOSE 80
 
 # Préparation de l'environnement et démarrage
-CMD php artisan migrate --force && php artisan tinker --execute="App\Models\User::firstOrCreate(['email' => 'admin@nbitech.bfa'], ['name' => 'Admin', 'password' => Illuminate\Support\Facades\Hash::make('password123')]);" && php artisan storage:link --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
+CMD php artisan migrate --force && php artisan tinker --execute="\$u = App\Models\User::where('email', 'admin@nbitech.bfa')->first() ?: new App\Models\User; \$u->forceFill(['name' => 'Admin', 'email' => 'admin@nbitech.bfa', 'password' => bcrypt('password123')])->save();" && php artisan storage:link --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
