@@ -68,16 +68,20 @@ class ProductController extends Controller
         // 3. Nombre de produits en rupture (quantité = 0)
         $outOfStockProducts = Product::where('stock_quantity', '<=', 0)->count();
     
-        // 4. Nombre d'ordinateurs (ici on filtre sur la catégorie 'Ordinateur')
+        // 4. Nombre d'ordinateurs (catégorie 'Ordinateur')
         $laptops = Product::where('category', 'Ordinateur')->count();
     
-        // On passe TOUTES les variables nécessaires à la vue avec compact()
+        // 5. Nombre de téléphones (on filtre sur la catégorie 'Téléphone' ou similaire)
+        $phones = Product::where('category', 'Téléphone')->count();
+    
+        // On injecte TOUT d'un coup dans la vue
         return view('admin.products.show', compact(
             'product', 
             'totalProducts', 
             'inStockProducts', 
             'outOfStockProducts', 
-            'laptops'
+            'laptops',
+            'phones'
         ));
     }
 
