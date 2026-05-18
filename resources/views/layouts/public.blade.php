@@ -17,9 +17,9 @@
     <nav x-data="{ mobileMenuOpen: false }" class="navbar-bg shadow-lg text-white sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
-            <a href="{{ route('home') }}" class="flex items-center rounded-lg bg-white/95 p-1.5 shadow-md ring-1 ring-white/70">
-                <img src="{{ asset('storage/img/nbi.jpg') }}" alt="NBI Tech Logo" class="h-14 md:h-16 w-auto object-contain">
-            </a>
+                <a href="{{ route('home') }}" class="flex items-center rounded-lg bg-white/95 p-1.5 shadow-md ring-1 ring-white/70">
+                    <img src="{{ asset('images/nbi.jpg') }}" alt="NBI Tech Logo" class="h-14 md:h-16 w-auto object-contain">
+                </a>
             
                 <div class="flex items-center gap-4">
                     <!-- Desktop Navigation (Caché sur mobile) -->
