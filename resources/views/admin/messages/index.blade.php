@@ -12,9 +12,9 @@
         <div class="divide-y divide-gray-100">
             @forelse ($messages as $message)
                 <a href="{{ route('admin.messages.show', $message) }}" class="block hover:bg-gray-50 transition-colors">
-                    <div class="flex items-center p-4 md:p-6 {{ !$message->read ? 'bg-indigo-50' : '' }}">
+                    <div class="flex items-center p-4 md:p-6 {{ !$message->is_read ? 'bg-indigo-50' : '' }}">
                         <div class="flex-shrink-0 mr-4">
-                            @if(!$message->read)
+                            @if(!$message->is_read)
                                 <span class="block w-3 h-3 bg-indigo-500 rounded-full"></span>
                             @else
                                 <span class="block w-3 h-3 bg-gray-300 rounded-full"></span>
@@ -22,14 +22,14 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex justify-between items-center mb-1">
-                                <p class="font-bold {{ !$message->read ? 'text-gray-900' : 'text-gray-600' }} truncate">
+                                <p class="font-bold {{ !$message->is_read ? 'text-gray-900' : 'text-gray-600' }} truncate">
                                     {{ $message->name }}
                                 </p>
                                 <p class="text-xs text-gray-400 ml-2 flex-shrink-0">
                                     {{ $message->created_at->diffForHumans() }}
                                 </p>
                             </div>
-                            <p class="text-sm {{ !$message->read ? 'text-gray-800 font-semibold' : 'text-gray-500' }} truncate">
+                            <p class="text-sm {{ !$message->is_read ? 'text-gray-800 font-semibold' : 'text-gray-500' }} truncate">
                                 {{ $message->subject }}
                             </p>
                             <p class="text-xs text-gray-400 mt-1 truncate">

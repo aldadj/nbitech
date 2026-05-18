@@ -22,7 +22,7 @@ class MessageController extends Controller
      */
     public function show(ContactMessage $message)
     {
-        $message->markAsRead(); // Marque le message comme lu dès qu'il est consulté
+        $message->markAsRead(); // Marque le message comme lu dès qu'il est consulté.
         return view('admin.messages.show', compact('message'));
     }
 
@@ -31,7 +31,7 @@ class MessageController extends Controller
      */
     public function markAsRead(ContactMessage $message)
     {
-        $message->markAsRead();
+        $message->markAsRead(); // Appelle la méthode markAsRead() du modèle.
         return back()->with('success', 'Message marqué comme lu.');
     }
 }

@@ -14,5 +14,18 @@ class ContactMessage extends Model
         'message',
         'is_read',
     ];
-}
 
+    /**
+     * Mark the message as read.
+     *
+     * @return bool
+     */
+    public function markAsRead(): bool
+    {
+        if (!$this->is_read) {
+            $this->is_read = true;
+            return $this->save();
+        }
+        return true;
+    }
+}
