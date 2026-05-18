@@ -58,13 +58,28 @@ class ProductController extends Controller
      * Display the specified product.
      */
     public function show(Product $product)
-{
-    // On récupère le total et le nombre de produits en stock pour la vue
-    $totalProducts = Product::count();
-    $inStockProducts = Product::where('stock_quantity', '>', 0)->count();
-
-    return view('admin.products.show', compact('product', 'totalProducts', 'inStockProducts'));
-}
+    {
+        // 1. Nombre total de produits
+        $totalProducts = Product::count();
+    
+        // 2. Nombre de produits en stock (quantité > 0)
+        $inStockProducts = Product::where('stock_quantity', '>', 0)->count();
+    
+        // 3. Nombre de produits en rupture (quantité = 0)
+        $outOfStockProducts = Product::where('stock_quantity', '<=', 0)->count();
+    
+        // 4. Nombre d'ordinateurs (ici on filtre sur la catégorie 'Ordinateur')
+        $laptops = Product::where('category', 'Ordinateur')->count();
+    
+        // On passe TOUTES les variables nécessaires à la vue avec compact()
+        return view('admin.products.show', compact(
+            'product', 
+            'totalProducts', 
+            'inStockProducts', 
+            'outOfStockProducts', 
+            'laptops'
+        ));
+    }
 
     /**
      * Show the form for editing the specified product.
