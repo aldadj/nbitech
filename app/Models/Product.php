@@ -3,12 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Storage;
 
-#[Fillable(['name', 'brand', 'category', 'description', 'price', 'stock_quantity', 'image'])]
 class Product extends Model
 {
+    /**
+     * Les attributs qui peuvent être assignés en masse.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'brand',
+        'category',
+        'description',
+        'price',
+        'stock_quantity',
+        'image'
+    ];
+
     /**
      * Get the attributes that should be cast.
      */

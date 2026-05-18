@@ -124,8 +124,23 @@
     </footer>
 
     <!-- Cart Modal -->
-    <div id="cartModal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-[60] flex items-center justify-center sm:p-4 overflow-y-auto">
-        <div class="bg-white sm:rounded-2xl shadow-2xl max-w-lg w-full h-full sm:h-auto sm:max-h-[90vh] flex flex-col">
+    <div id="cartModal" x-data="{ openCartModal: false }" x-show="openCartModal"
+         @open-cart-modal.window="openCartModal = true"
+         @close-cart-modal.window="openCartModal = false"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         @click.self="openCartModal = false" class="fixed inset-0 bg-black bg-opacity-60 z-[60] flex items-center justify-center sm:p-4 overflow-y-auto">
+        <div class="bg-white sm:rounded-2xl shadow-2xl max-w-lg w-full h-full sm:h-auto sm:max-h-[90vh] flex flex-col"
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95">
             <div class="flex justify-between items-center p-5 border-b border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900">🛒 Mon Panier</h2>
             </div>
@@ -147,7 +162,7 @@
                         <label class="relative flex flex-col items-center p-2 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-indigo-50 transition has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
                             <input type="radio" name="delivery" value="pickup" checked class="peer absolute opacity-0">
                             <span class="text-xl mb-1">🏪</span>
-                            <span class="text-xs font-bold text-gray-900">Retrait Boutique</span>
+                            <span class="text-sm font-bold text-gray-900">Retrait Boutique</span>
                         </label>
                         <label class="relative flex flex-col items-center p-3 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-indigo-50 transition has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
                             <input type="radio" name="delivery" value="delivery" class="absolute opacity-0">
@@ -168,10 +183,12 @@
                 </div>
 
                 <!-- Action Buttons -->
+                <div class="mt-6">
+                    <button onclick="validateOrder(this)" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition text-sm mb-2">
                         ✅ Valider la Commande
                     </button>
                     <div class="grid grid-cols-2 gap-2">
-                        <button onclick="cancelOrder()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-bold py-2 px-4 rounded-xl transition text-sm">
+                        <button onclick="cancelOrder()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-bold py-3 px-4 rounded-xl transition text-sm">
                             Annuler
                         </button>
                         <button onclick="clearCart()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded-xl transition text-sm">
@@ -268,7 +285,6 @@
                     total += itemTotal;
                     
                     html += `
-                        <div class="flex gap-4 items-center mb-4 pb-4 border-b border-gray-50">
                         <div class="flex gap-3 items-center mb-4 pb-4 border-b border-gray-50">
                             <div class="flex-1 min-w-0">
                                 <p class="font-semibold text-gray-900 text-sm truncate">${item.name}</p>
@@ -278,6 +294,7 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <div class="flex items-center bg-gray-100 rounded-lg p-1">
+                                    <button onclick="updateQuantity(${item.id}, -1)" class="bg-white hover:bg-gray-200 text-gray-900 font-bold w-6 h-6 rounded shadow-sm text-xs transition">-</button>
                                     <span class="w-8 text-center font-bold text-sm text-gray-700">${item.quantity}</span>
                                     <button onclick="updateQuantity(${item.id}, 1)" class="bg-white hover:bg-gray-200 text-gray-900 font-bold w-6 h-6 rounded shadow-sm text-xs transition">+</button>
                                 </div>
@@ -309,7 +326,7 @@
                 });
             }
             
-            modal.classList.remove('hidden');
+            document.dispatchEvent(new CustomEvent('open-cart-modal'));
         }
         
         function validateOrder(button) {
@@ -451,8 +468,9 @@ Merci pour votre commande!
             }
         });
         
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', updateCartCount);
+        // Initialize cart count on page load
+        document.addEventListener('DOMContentLoaded', () => { updateCartCount(); });
     </script>
+    @stack('scripts') {{-- This is where pushed scripts will be rendered --}}
 </body>
 </html>
