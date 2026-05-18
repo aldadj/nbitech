@@ -4,65 +4,65 @@
 @section('heading', 'Tableau de Bord')
 
 @section('content')
-    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 md:gap-6 mb-8">
+    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2 md:gap-6 mb-8">
         
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-5 transition hover:shadow-md">
-            <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-5 transition hover:shadow-md">
+            <div class="flex flex-col lg:flex-row items-center justify-between text-center lg:text-left">
                 <div>
                     <p class="text-gray-400 text-[10px] uppercase font-bold tracking-widest">Commandes</p>
-                    <p class="text-lg md:text-3xl font-black text-orange-600 mt-1">{{ $totalOrders ?? 0 }}</p>
+                    <p class="text-base md:text-3xl font-black text-orange-600 mt-1">{{ $totalOrders ?? 0 }}</p>
                 </div>
-                <div class="bg-orange-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 sm:mt-0">🛍️</div>
+                <div class="hidden sm:block bg-orange-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 lg:mt-0">🛍️</div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-5 transition hover:shadow-md">
-            <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-5 transition hover:shadow-md">
+            <div class="flex flex-col lg:flex-row items-center justify-between text-center lg:text-left">
                 <div>
                     <p class="text-gray-400 text-[10px] uppercase font-bold tracking-widest">Produits</p>
-                    <p class="text-lg md:text-3xl font-black text-gray-900 mt-1">{{ $totalProducts }}</p>
+                    <p class="text-base md:text-3xl font-black text-gray-900 mt-1">{{ $totalProducts }}</p>
                 </div>
-                <div class="bg-gray-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 sm:mt-0">📦</div>
+                <div class="hidden sm:block bg-gray-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 lg:mt-0">📦</div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-5 transition hover:shadow-md">
-            <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-5 transition hover:shadow-md">
+            <div class="flex flex-col lg:flex-row items-center justify-between text-center lg:text-left">
                 <div>
                     <p class="text-gray-400 text-[10px] uppercase font-bold tracking-widest">En Stock</p>
-                    <p class="text-lg md:text-3xl font-black text-green-600 mt-1">{{ $inStockProducts }}</p>
+                    <p class="text-base md:text-3xl font-black text-green-600 mt-1">{{ $inStockProducts }}</p>
                 </div>
-                <div class="bg-green-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 sm:mt-0">✅</div>
+                <div class="hidden sm:block bg-green-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 lg:mt-0">✅</div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-5 transition hover:shadow-md">
-            <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-5 transition hover:shadow-md">
+            <div class="flex flex-col lg:flex-row items-center justify-between text-center lg:text-left">
                 <div>
                     <p class="text-gray-400 text-[10px] uppercase font-bold tracking-widest">Rupture</p>
-                    <p class="text-lg md:text-3xl font-black text-red-600 mt-1">{{ $outOfStockProducts }}</p>
+                    <p class="text-base md:text-3xl font-black text-red-600 mt-1">{{ $outOfStockProducts }}</p>
                 </div>
-                <div class="bg-red-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 sm:mt-0">❌</div>
+                <div class="hidden sm:block bg-red-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 lg:mt-0">❌</div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-5 transition hover:shadow-md">
-            <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-5 transition hover:shadow-md">
+            <div class="flex flex-col lg:flex-row items-center justify-between text-center lg:text-left">
                 <div>
                     <p class="text-gray-400 text-[10px] uppercase font-bold tracking-widest">PC</p>
-                    <p class="text-lg md:text-3xl font-black text-indigo-600 mt-1">{{ $laptops }}</p>
+                    <p class="text-base md:text-3xl font-black text-indigo-600 mt-1">{{ $laptops }}</p>
                 </div>
-                <div class="bg-indigo-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 sm:mt-0">💻</div>
+                <div class="hidden sm:block bg-indigo-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 lg:mt-0">💻</div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-5 transition hover:shadow-md">
-            <div class="flex flex-col sm:flex-row items-center justify-between text-center sm:text-left">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-2 md:p-5 transition hover:shadow-md">
+            <div class="flex flex-col lg:flex-row items-center justify-between text-center lg:text-left">
                 <div>
                     <p class="text-gray-400 text-[10px] uppercase font-bold tracking-widest">Tél</p>
-                    <p class="text-lg md:text-3xl font-black text-purple-600 mt-1">{{ $phones }}</p>
+                    <p class="text-base md:text-3xl font-black text-purple-600 mt-1">{{ $phones }}</p>
                 </div>
-                <div class="bg-purple-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 sm:mt-0">📱</div>
+                <div class="hidden sm:block bg-purple-50 p-2 md:p-3 rounded-lg text-xl md:text-2xl mt-2 lg:mt-0">📱</div>
             </div>
         </div>
     </div>
@@ -81,9 +81,9 @@
                 <thead class="bg-gray-50/50">
                     <tr class="whitespace-nowrap uppercase text-[9px] md:text-[10px] font-black tracking-widest text-gray-400">
                         <th class="px-4 py-3 md:px-6">Client</th>
-                        <th class="px-4 py-3 md:px-6">Montant</th>
-                        <th class="px-4 py-3 md:px-6">Statut</th>
-                        <th class="px-4 py-3 md:px-6">Date</th>
+                        <th class="px-4 py-3 md:px-6">Total</th>
+                        <th class="px-4 py-3 md:px-6 hidden sm:table-cell">Statut</th>
+                        <th class="px-4 py-3 md:px-6 hidden md:table-cell">Date</th>
                         <th class="px-4 py-3 md:px-6 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -93,16 +93,22 @@
                             <td class="px-4 py-3 md:px-6">
                                 <div class="font-bold text-gray-900">{{ $order->customer_name }}</div>
                                 <div class="text-[10px] text-gray-400">{{ $order->customer_phone }}</div>
+                                {{-- Badge de statut visible uniquement sur mobile sous le nom --}}
+                                <div class="sm:hidden mt-1">
+                                    <span class="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase {{ $order->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700' }}">
+                                        {{ $order->status === 'pending' ? 'Attente' : 'Prêt' }}
+                                    </span>
+                                </div>
                             </td>
-                            <td class="px-4 py-3 md:px-6 font-bold text-gray-700">
+                            <td class="px-4 py-3 md:px-6 font-bold text-gray-700 whitespace-nowrap">
                                 {{ number_format($order->total_amount, 0, ',', ' ') }} <span class="text-[9px]">CFA</span>
                             </td>
-                            <td class="px-4 py-3 md:px-6">
+                            <td class="px-4 py-3 md:px-6 hidden sm:table-cell">
                                 <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase {{ $order->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700' }}">
                                     {{ $order->status === 'pending' ? 'En attente' : 'Livrée' }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 md:px-6 text-gray-400 text-[10px] whitespace-nowrap">
+                            <td class="px-4 py-3 md:px-6 text-gray-400 text-[10px] whitespace-nowrap hidden md:table-cell">
                                 {{ $order->created_at->diffForHumans() }}
                             </td>
                             <td class="px-4 py-3 md:px-6 text-right">
