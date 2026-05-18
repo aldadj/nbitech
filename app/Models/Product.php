@@ -52,13 +52,19 @@ class Product extends Model
     /**
      * Get the public URL of product image.
      */
+    /**
+     * Get the public URL of product image.
+     */
     public function imageUrl(): ?string
     {
         if (!$this->hasImage()) {
             return null;
         }
 
-        $url = Storage::disk('public')->url($this->image);
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('public');
+        $url = $disk->url($this->image);
+        
         $pathOnly = parse_url($url, PHP_URL_PATH);
 
         return $pathOnly ?: $url;
