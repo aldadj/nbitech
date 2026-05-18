@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -74,6 +75,11 @@ class ProductController extends Controller
         // 5. Nombre de téléphones (on filtre sur la catégorie 'Téléphone' ou similaire)
         $phones = Product::where('category', 'Téléphone')->count();
     
+        // 6. Données manquantes pour la vue (Dashboard clone)
+        $totalOrders = Order::count();
+        $recentProducts = Product::latest()->take(5)->get();
+        $recentOrders = Order::latest()->take(5)->get();
+
         // On injecte TOUT d'un coup dans la vue
         return view('admin.products.show', compact(
             'product', 
@@ -81,7 +87,10 @@ class ProductController extends Controller
             'inStockProducts', 
             'outOfStockProducts', 
             'laptops',
-            'phones'
+            'phones',
+            'totalOrders',
+            'recentProducts',
+            'recentOrders'
         ));
     }
 
