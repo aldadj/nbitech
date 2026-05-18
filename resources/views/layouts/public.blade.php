@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - NBI Tech & Engineering SARL</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .navbar-bg {
@@ -13,29 +14,63 @@
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
-    <nav class="navbar-bg shadow-lg text-white sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <nav x-data="{ mobileMenuOpen: false }" class="navbar-bg shadow-lg text-white sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
             <a href="{{ route('home') }}" class="flex items-center rounded-lg bg-white/95 p-1.5 shadow-md ring-1 ring-white/70">
                 <img src="{{ asset('storage/img/nbi.jpg') }}" alt="NBI Tech Logo" class="h-14 md:h-16 w-auto object-contain">
             </a>
             
-            <div class="flex gap-6 items-center">
-                <a href="{{ route('home') }}" class="hover:text-gray-200 transition">Accueil</a>
-                <a href="{{ route('catalog') }}" class="hover:text-gray-200 transition">Catalogue</a>
-                <a href="{{ route('contact') }}" class="hover:text-gray-200 transition">Contact</a>
-                <a href="#cart" onclick="showCart(event)" class="hover:text-gray-200 transition relative text-2xl">
-                    🛒
-                    <span id="cartCount" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
-                </a>
-                
+                <div class="flex items-center gap-4">
+                    <!-- Desktop Navigation (Caché sur mobile) -->
+                    <div class="hidden md:flex gap-6 items-center">
+                        <a href="{{ route('home') }}" class="hover:text-gray-200 transition">Accueil</a>
+                        <a href="{{ route('catalog') }}" class="hover:text-gray-200 transition">Catalogue</a>
+                        <a href="{{ route('contact') }}" class="hover:text-gray-200 transition">Contact</a>
+                        
+                        @auth
+                            <a href="{{ route('admin.dashboard') }}" class="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded transition text-sm">Admin</a>
+                            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="hover:text-gray-200 transition text-sm">Déconnexion</button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded transition text-sm">Admin Login</a>
+                        @endauth
+                    </div>
+
+                    <!-- Cart Icon (Toujours visible) -->
+                    <a href="#cart" onclick="showCart(event)" class="hover:text-gray-200 transition relative text-2xl pr-2">
+                        🛒
+                        <span id="cartCount" class="absolute -top-2 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                    </a>
+
+                    <!-- Mobile Menu Button (Uniquement sur mobile) -->
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 focus:outline-none">
+                        <svg x-show="!mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        <svg x-show="mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Links (S'affiche quand mobileMenuOpen est vrai) -->
+            <div x-show="mobileMenuOpen" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 -translate-y-4"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 class="md:hidden mt-4 pt-4 border-t border-white/20 flex flex-col gap-4 text-lg">
+                <a href="{{ route('home') }}" class="hover:text-gray-200 transition py-2" @click="mobileMenuOpen = false">Accueil</a>
+                <a href="{{ route('catalog') }}" class="hover:text-gray-200 transition py-2" @click="mobileMenuOpen = false">Catalogue</a>
+                <a href="{{ route('contact') }}" class="hover:text-gray-200 transition py-2" @click="mobileMenuOpen = false">Contact</a>
+                <hr class="border-white/20">
                 @auth
-                    <a href="{{ route('admin.dashboard') }}" class="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded transition">Admin</a>
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="hover:text-gray-200 transition">Déconnexion</button>
-                    </form>
+                    <a href="{{ route('admin.dashboard') }}" class="text-yellow-400 font-bold py-2">Dashboard Admin</a>
                 @else
-                    <a href="{{ route('login') }}" class="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded transition">Admin Login</a>
+                    <a href="{{ route('login') }}" class="text-yellow-400 font-bold py-2">Connexion Admin</a>
                 @endauth
             </div>
         </div>
@@ -82,21 +117,21 @@
             </div>
 
             <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
-                <p>&copy; 2026 NBI Tech & Engineering SARL. Tous droits réservés.</p>
-                <p class="text-sm mt-2">Spécialisé dans la vente d'ordinateurs portables et téléphones portables</p>
+                <p>&copy; 2026 ALDADJ Tech, programmeur fullstack. Tous droits réservés.</p>
+                <p class="text-sm mt-2">Spécialisé dans la conception et la maintenance informatique</p>
             </div>
         </div>
     </footer>
 
     <!-- Cart Modal -->
-    <div id="cartModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full my-8 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+    <div id="cartModal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-[60] flex items-center justify-center sm:p-4 overflow-y-auto">
+        <div class="bg-white sm:rounded-2xl shadow-2xl max-w-lg w-full h-full sm:h-auto sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-5 border-b border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900">🛒 Mon Panier</h2>
-                <button onclick="closeCart()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
             </div>
             
             <div id="cartItems" class="flex-1 overflow-y-auto p-6">
+            <div id="cartItems" class="flex-1 overflow-y-auto p-5">
                 <!-- Cart items will be rendered here -->
             </div>
             
@@ -109,14 +144,14 @@
                 <!-- Delivery Options -->
                 <div id="deliverySection" class="hidden">
                     <div class="grid grid-cols-2 gap-3 mb-4">
-                        <label class="relative flex flex-col items-center p-3 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-indigo-50 transition has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
-                            <input type="radio" name="delivery" value="pickup" checked class="absolute opacity-0">
+                        <label class="relative flex flex-col items-center p-2 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-indigo-50 transition has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
+                            <input type="radio" name="delivery" value="pickup" checked class="peer absolute opacity-0">
                             <span class="text-xl mb-1">🏪</span>
                             <span class="text-xs font-bold text-gray-900">Retrait Boutique</span>
                         </label>
                         <label class="relative flex flex-col items-center p-3 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-indigo-50 transition has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
                             <input type="radio" name="delivery" value="delivery" class="absolute opacity-0">
-                            <span class="text-xl mb-1">🛵</span>
+                        <label class="relative flex flex-col items-center p-2 border-2 border-gray-100 rounded-xl cursor-pointer hover:bg-indigo-50 transition has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
                             <span class="text-xs font-bold text-gray-900">Livraison Domicile</span>
                         </label>
                     </div>
@@ -133,8 +168,6 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="space-y-2 pt-4">
-                    <button onclick="validateOrder(this)" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-4 rounded-xl transition shadow-lg shadow-green-100 disabled:opacity-75 disabled:cursor-not-allowed">
                         ✅ Valider la Commande
                     </button>
                     <div class="grid grid-cols-2 gap-2">
@@ -142,6 +175,7 @@
                             Annuler
                         </button>
                         <button onclick="clearCart()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded-xl transition text-sm">
+                        <button onclick="clearCart()" class="w-full bg-gray-100 text-gray-600 font-bold py-3 rounded-xl transition text-xs">
                             Vider
                         </button>
                     </div>
@@ -152,11 +186,10 @@
 
     <!-- Cart Notification -->
     <div id="cartNotification" class="fixed top-24 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-2xl hidden z-[60] transition-all transform translate-y-0">
+    <div id="cartNotification" class="fixed bottom-6 right-4 left-4 sm:left-auto sm:w-80 bg-green-600 text-white px-6 py-4 rounded-xl shadow-2xl hidden z-[70] transition-all">
         <div class="flex items-center gap-3">
             <span class="text-xl">✅</span>
             <span class="font-bold">Produit ajouté au panier !</span>
-        </div>
-    </div>
 
     <script>
         function addToCart(button, productId, productName, price, category) {
@@ -236,14 +269,15 @@
                     
                     html += `
                         <div class="flex gap-4 items-center mb-4 pb-4 border-b border-gray-50">
+                        <div class="flex gap-3 items-center mb-4 pb-4 border-b border-gray-50">
                             <div class="flex-1 min-w-0">
                                 <p class="font-semibold text-gray-900 text-sm truncate">${item.name}</p>
                                 <p class="text-xs text-gray-600">${item.category}</p>
                                 <p class="text-indigo-600 font-bold mt-1">${new Intl.NumberFormat('fr-FR').format(item.price)} FCFA</p>
+                                <p class="text-indigo-600 font-bold mt-1 text-sm">${new Intl.NumberFormat('fr-FR').format(item.price)} FCFA</p>
                             </div>
                             <div class="flex items-center gap-3">
                                 <div class="flex items-center bg-gray-100 rounded-lg p-1">
-                                    <button onclick="updateQuantity(${item.id}, -1)" class="bg-white hover:bg-gray-200 text-gray-900 font-bold w-6 h-6 rounded shadow-sm text-xs transition">-</button>
                                     <span class="w-8 text-center font-bold text-sm text-gray-700">${item.quantity}</span>
                                     <button onclick="updateQuantity(${item.id}, 1)" class="bg-white hover:bg-gray-200 text-gray-900 font-bold w-6 h-6 rounded shadow-sm text-xs transition">+</button>
                                 </div>
