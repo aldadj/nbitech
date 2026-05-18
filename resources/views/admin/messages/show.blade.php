@@ -25,7 +25,7 @@
                     ← Retour aux messages
                 </a>
 
-                @if(!$message->read)
+                @if(!$message->is_read)
                     <form action="{{ route('admin.messages.markAsRead', $message) }}" method="POST" class="w-full sm:w-auto">
                         @csrf
                         @method('PATCH')
